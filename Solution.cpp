@@ -7,7 +7,7 @@ ll totalBlockWeight = 4000000; // Given in the problem
 
 //ll totalBlockWeight = 1000;
 
-vector<string> ordering; // to store the Correct ordering
+vector<string> ordering; // to store the Correct ordering using Toplogical Sort
 
 // Structure to store information regarding the Transaction
 
@@ -30,7 +30,6 @@ struct mydata
 };
 
 vector<TransactionInfo> transactions; // To store all the transactions
-map<string, ll> indexOfId;            // Map each Transaction Id to a integer/ll
 map<string, mydata> helper;           // Helper map used to fetch data via Ordering
 
 // Using c++ Streams to read and parse data inside the input file
@@ -76,9 +75,9 @@ void readCSV()
                 break;
             }
         }
-        indexOfId[tempTransaction.tx_id] = transactions.size(); // Mapping Each transactionId to an integer
-        transactions.push_back(tempTransaction);                // storing the transactions
-        helper[tempTransaction.tx_id] = {tempTransaction.fee,   // Maintaing the helper HashMap
+
+        transactions.push_back(tempTransaction);              // storing the transactions
+        helper[tempTransaction.tx_id] = {tempTransaction.fee, // Maintaing the helper HashMap
                                          tempTransaction.weight,
                                          tempTransaction.parents};
     }
@@ -102,8 +101,8 @@ void getOutput(vector<string> &output, string filename)
 void topologicalsort()
 {
 
-    // Here we perform the toplogical Sort , Here I have assumed that the transactions don't have any
-    // conflict among themselves , that is the graph of the transactions is Acyclic .
+    // Here we perform the toplogical Sort and I have assumed that the transactions don't have any
+    // conflict among themselves , that  the graph of the transactions is Acyclic .
 
     unordered_map<string, ll> indegree;
 
@@ -138,7 +137,6 @@ void topologicalsort()
         }
     }
 
-    vector<string> osf;
     while (q.size() > 0)
     {
 
@@ -160,13 +158,13 @@ void topologicalsort()
 
 ll ans = 0;
 
-vector<string> res; // String to store the result
+vector<string> res; // vector to store the result
 
 map<string, bool> vis; // used inside the Greedy Method in Main
 
 bool isValid(ll start, ll currwt)
 
-// Checks wether each Transaction is valid or not by following the problem statement
+// Checks whether each Transaction is valid or not by following the problem statement
 
 //  It ensures two things  :
 //  1 . Wether taking the current transaction exceeds the weight beyond the limit or not
@@ -187,7 +185,7 @@ bool isValid(ll start, ll currwt)
         }
     }
 
-    // No unvisited parent and including this will keep the overall weight  under the limit
+    // No unvisited parent and including this Transaction will keep the overall weight  under the limit
 
     return true;
 }
@@ -213,16 +211,22 @@ void utility(ll start, ll currwt, ll amount, vector<string> &osf)
         return;
     }
 
-    if (isValid(start, currwt)) // Checks if it is valid to add the current item as Transaction
+    if (isValid(start, currwt)) // Checks if it is valid to add the current Transaction or not
     {
+
+        // 2 options if we can take the current weight ;
+
         vis[ordering[start]] = 1;
 
         osf.push_back(ordering[start]);
+
+        // include the transaction
         utility(start + 1, currwt + helper[ordering[start]].myweight, amount + helper[ordering[start]].myfee, osf);
-        // 2 options if we can take the current weight ;
+
         vis[ordering[start]] = 0;
         osf.pop_back();
 
+        // Not include the transaction
         utility(start + 1, currwt, amount, osf);
     }
 
@@ -284,7 +288,7 @@ int main()
 
     readCSV(); // read the CSV file
 
-    topologicalsort(); // perform toplogical sorting to order the all the transactions in a way
+    topologicalsort(); // perform toplogical sorting to order  all the transactions in a way
     // such that all parents come before their children in the ordering array we created above .
 
     // dry run on sample output
@@ -306,11 +310,11 @@ int main()
     // Here we go over each possible ratio from 0 to ratio_avg and determine which ratio gives the best Fees
     // and also keeps the overall Weight under the limit .
 
-    for (double i = 0; i < ratio_avg; i += 0.1)
+    for (double i = 0; i <= ratio_avg; i += 0.1)
     {
         for (auto it : ordering)
         {
-            vis[it] = 0;
+            vis[it] = 0; // Reseting the visited array for every Iteration
         }
 
         good(i); // void function which helps to determine the best transactions fees
