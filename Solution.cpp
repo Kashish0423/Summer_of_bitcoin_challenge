@@ -322,7 +322,7 @@ int main()
 
     cout << endl;
 
-    cout << "Maxmimum Fees : " << max_cost << endl;
+    cout << "Maxmimum Fees of the Resultant Block : " << max_cost << endl;
 
     cout << endl;
 
@@ -334,3 +334,5 @@ int main()
 
     return 0;
 }
+
+// Time Complexity : O(N ^ 2) where N is the total Number of Transactions
