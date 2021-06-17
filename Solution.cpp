@@ -3,9 +3,9 @@
 using namespace std;
 typedef unsigned long long int ll; // using this to avoid any possible overflow
 
-//ll totalBlockWeight = 4000000; // Given in the problem
+ll totalBlockWeight = 4000000; // Given in the problem
 
-ll totalBlockWeight = 1000;
+//ll totalBlockWeight = 1000;
 
 vector<string> ordering; // to store the Correct ordering
 
@@ -38,8 +38,8 @@ void readCSV()
 {
 
     cout << "Reading data" << endl;
-    //ifstream mempoolCsv("mempool.csv"); // Actual File
-    ifstream mempoolCsv("sample.csv"); // Sample file used
+    ifstream mempoolCsv("mempool.csv"); // Actual File
+    //ifstream mempoolCsv("sample.csv"); // Sample file used
     string blockData;
 
     getline(mempoolCsv, blockData);
@@ -326,7 +326,7 @@ int main()
 
     cout << endl;
 
-    getOutput(res, "sample.txt");
+    getOutput(res, "block.txt");
 
     return 0;
 }
